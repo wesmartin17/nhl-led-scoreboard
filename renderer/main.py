@@ -76,14 +76,6 @@ class MainRenderer:
             # Center the game time on screen.
             game_time_pos = center_text(self.font_mini.getsize(game_time)[0], 32)
 
-            # Set the position of each logo
-            away_team_logo_pos = self.screen_config.team_logos_pos[str(overview['away_team_id'])]['away']
-            home_team_logo_pos = self.screen_config.team_logos_pos[str(overview['home_team_id'])]['home']
-
-            # Open the logo image file
-            away_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
-            home_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
-
             # Draw the text on the Data image.
             self.draw.text((22, -1), 'TODAY', font=self.font_mini)
             self.draw.multiline_text((game_time_pos, 5), game_time, fill=(255, 255, 255), font=self.font_mini, align="center")
@@ -91,10 +83,6 @@ class MainRenderer:
 
             # Put the data on the canvas
             self.canvas.SetImage(self.image, 0, 0)
-
-            # Put the images on the canvas
-            self.canvas.SetImage(away_team_logo.convert("RGB"), away_team_logo_pos["x"], away_team_logo_pos["y"])
-            self.canvas.SetImage(home_team_logo.convert("RGB"), home_team_logo_pos["x"], home_team_logo_pos["y"])
 
             # Load the canvas on screen.
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
