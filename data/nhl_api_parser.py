@@ -118,11 +118,10 @@ def fetch_overview(team_id):
 
     # Set URL depending on team selected
     url = '{0}schedule?expand=schedule.linescore&teamId={1}'.format(NHL_API_URL, team_id)
-
     try:
         game_data = requests.get(url)
         game_data = game_data.json()
-
+        print(game_data['dates'][0]['games'][0]['linescore'])
         period = game_data['dates'][0]['games'][0]['linescore']['currentPeriodOrdinal']
         time = game_data['dates'][0]['games'][0]['linescore']['currentPeriodTimeRemaining']
         home_team_id = int(game_data['dates'][0]['games'][0]['teams']['home']['team']['id'])
@@ -131,10 +130,12 @@ def fetch_overview(team_id):
         away_score = int(game_data['dates'][0]['games'][0]['teams']['away']['score'])
         game_status = int(game_data['dates'][0]['games'][0]['status']['statusCode'])
         game_time = convert_time(game_data["dates"][0]["games"][0]["gameDate"]).strftime("%I:%M")
-
+        is_intermission = bool(game_data['dates'][0]['games'][0]['linescore']['intermissionInfo']['inIntermission'])
+        intermission_time_rem = int(game_data['dates'][0]['games'][0]['linescore']['intermissionInfo']['intermissionTimeRemaining'])
+        
         current_game_overview = {'period': period, 'time': time, 'home_team_id': home_team_id, 'home_score': home_score,
                                  'away_team_id': away_team_id, 'away_score': away_score, 'game_status': game_status,
-                                 'game_time': game_time}
+                                 'game_time': game_time, 'is_intermission':is_intermission, 'intermission_time_rem':intermission_time_rem}
 
         return current_game_overview
     except requests.exceptions.RequestException:

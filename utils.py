@@ -2,6 +2,7 @@ from rgbmatrix import RGBMatrixOptions, graphics
 import collections
 import argparse
 import os
+import math
 import debug
 import datetime
 from tzlocal import get_localzone
@@ -96,3 +97,23 @@ def convert_time(utc_dt):
 
   local_dt = datetime.datetime.strptime(utc_dt, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=pytz.utc).astimezone(local_tz)
   return local_tz.normalize(local_dt)  # .normalize might be unnecessary
+
+def time_countdown(game):
+  game = game.split(":")
+  game_in_seconds = int(game[0])*60*60 + int(game[1])*60
+
+  current_time = str(datetime.datetime.now().time()).split(":") #15:08:24.789150
+  current_time_seconds = int(current_time[0]) % 12 * 60 * 60 + int(current_time[1]) * 60 + int(round(float(current_time[2])))
+  
+  time_remaining = game_in_seconds - current_time_seconds
+
+  hours = int(math.floor(time_remaining / 3600))
+  time_remaining = time_remaining - hours * 3600
+
+  minutes = int(math.floor(time_remaining / 60))
+
+  time_remaining = time_remaining - minutes * 60
+
+  seconds = time_remaining
+  
+  return "{}:{}:{}".format(str(hours),str(minutes).zfill(2),str(seconds).zfill(2))

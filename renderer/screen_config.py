@@ -7,6 +7,7 @@ import debug
 class screenConfig:
     def __init__(self, filename_base):
         json = self.__get_config(filename_base)
+        self.team_colors = json["team_colors"]
         self.team_logos_pos = json["team_logos"]
 
     def read_json(self, filename):
